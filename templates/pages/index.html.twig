@@ -19,7 +19,7 @@
         <div class="tricks-container py-5">
             {% for trick in tricks %}
                 <div class="px-2">
-                    <a href="#" class="text-decoration-none text-dark">
+                    <a href="{{ path('trick_show', {group_slug: trick.trickGroup.slug, trick_slug: trick.slug}) }}" class="text-decoration-none text-dark">
                         <div class="card">
                             <div class="card-head">
                                 <img src="https://via.placeholder.com/300x175" class="img-fluid" alt="">
