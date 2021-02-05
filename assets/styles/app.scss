@@ -1,1 +1,11 @@
 @import '~bootstrap/scss/bootstrap';
+
+.tricks-container {
+  display: flex;
+
+  @include row-cols(5);
+
+  .trick-card {
+
+  }
+}

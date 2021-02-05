@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TrickRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,6 +34,31 @@ class Trick
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick_group;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrickPicture::class, mappedBy="trick")
+     */
+    private $pictures;
+
+    public function __construct()
+    {
+        $this->pictures = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrickPicture::class, mappedBy="trick")
+     */
+    private $pictures;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
+    public function __construct()
+    {
+        $this->pictures = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -70,6 +97,78 @@ class Trick
     public function setTrickGroup(?TrickGroup $trick_group): self
     {
         $this->trick_group = $trick_group;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickPicture[]
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(TrickPicture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(TrickPicture $picture): self
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickPicture[]
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(TrickPicture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(TrickPicture $picture): self
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
