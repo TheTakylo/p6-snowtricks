@@ -16,5 +16,21 @@
                 <img src="{{ asset('build/images/snow.jpg') }}" class="img-fluid" alt="">
             </div>
         </div>
+        <div class="tricks-container py-5">
+            {% for trick in tricks %}
+                <div class="px-2">
+                    <a href="#" class="text-decoration-none text-dark">
+                        <div class="card">
+                            <div class="card-head">
+                                <img src="https://via.placeholder.com/300x175" class="img-fluid" alt="">
+                            </div>
+                            <div class="card-body">
+                                {{ trick.name }}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
