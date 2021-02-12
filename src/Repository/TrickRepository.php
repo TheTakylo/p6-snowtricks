@@ -27,4 +27,14 @@ class TrickRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findOneBySlugAndGroupSlug(string $trickSlug, string $groupSlug)
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('t.trickGroup', 'tg')
+            ->where('t.slug = :trick_slug')->setParameter('trick_slug', $trickSlug)
+            ->andWhere('tg.slug = :group_slug')->setParameter('group_slug', $groupSlug)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

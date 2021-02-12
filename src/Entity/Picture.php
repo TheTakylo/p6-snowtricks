@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickPictureRepository;
+use App\Repository\PictureRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TrickPictureRepository::class)
+ * @ORM\Entity(repositoryClass=PictureRepository::class)
  */
-class TrickPicture
+class Picture
 {
     /**
      * @ORM\Id
@@ -24,9 +24,13 @@ class TrickPicture
 
     /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="pictures")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TrickGroup::class, inversedBy="pictures")
+     */
+    private $trickGroup;
 
     public function getId(): ?int
     {
@@ -53,6 +57,18 @@ class TrickPicture
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getTrickGroup(): ?TrickGroup
+    {
+        return $this->trickGroup;
+    }
+
+    public function setTrickGroup(?TrickGroup $trickGroup): self
+    {
+        $this->trickGroup = $trickGroup;
 
         return $this;
     }

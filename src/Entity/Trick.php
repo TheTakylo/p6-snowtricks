@@ -20,7 +20,7 @@ class Trick
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 
@@ -33,27 +33,17 @@ class Trick
      * @ORM\ManyToOne(targetEntity=TrickGroup::class, inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $trick_group;
+    private $trickGroup;
 
     /**
-     * @ORM\OneToMany(targetEntity=TrickPicture::class, mappedBy="trick")
-     */
-    private $pictures;
-
-    public function __construct()
-    {
-        $this->pictures = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\OneToMany(targetEntity=TrickPicture::class, mappedBy="trick")
-     */
-    private $pictures;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $slug;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="trick")
+     */
+    private $pictures;
 
     public function __construct()
     {
@@ -91,72 +81,12 @@ class Trick
 
     public function getTrickGroup(): ?TrickGroup
     {
-        return $this->trick_group;
+        return $this->trickGroup;
     }
 
-    public function setTrickGroup(?TrickGroup $trick_group): self
+    public function setTrickGroup(?TrickGroup $trickGroup): self
     {
-        $this->trick_group = $trick_group;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|TrickPicture[]
-     */
-    public function getPictures(): Collection
-    {
-        return $this->pictures;
-    }
-
-    public function addPicture(TrickPicture $picture): self
-    {
-        if (!$this->pictures->contains($picture)) {
-            $this->pictures[] = $picture;
-            $picture->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removePicture(TrickPicture $picture): self
-    {
-        if ($this->pictures->removeElement($picture)) {
-            // set the owning side to null (unless already changed)
-            if ($picture->getTrick() === $this) {
-                $picture->setTrick(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|TrickPicture[]
-     */
-    public function getPictures(): Collection
-    {
-        return $this->pictures;
-    }
-
-    public function addPicture(TrickPicture $picture): self
-    {
-        if (!$this->pictures->contains($picture)) {
-            $this->pictures[] = $picture;
-            $picture->setTrick($this);
-        }
-
-        return $this;
-    }
-
-    public function removePicture(TrickPicture $picture): self
-    {
-        if ($this->pictures->removeElement($picture)) {
-            // set the owning side to null (unless already changed)
-            if ($picture->getTrick() === $this) {
-                $picture->setTrick(null);
-            }
-        }
+        $this->trickGroup = $trickGroup;
 
         return $this;
     }
@@ -169,6 +99,36 @@ class Trick
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Picture[]
+     */
+    public function getPictures(): Collection
+    {
+        return $this->pictures;
+    }
+
+    public function addPicture(Picture $picture): self
+    {
+        if (!$this->pictures->contains($picture)) {
+            $this->pictures[] = $picture;
+            $picture->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removePicture(Picture $picture): self
+    {
+        if ($this->pictures->removeElement($picture)) {
+            // set the owning side to null (unless already changed)
+            if ($picture->getTrick() === $this) {
+                $picture->setTrick(null);
+            }
+        }
 
         return $this;
     }
