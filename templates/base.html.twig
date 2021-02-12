@@ -28,18 +28,20 @@
                 <li class="nav-item">
                     <a class="nav-link {% if app.request.get('_route') in ['trick_list', 'trick_list_group'] %}active{% endif %}" aria-current="page" href="{{ path('trick_list') }}">Figures</a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" aria-current="page" href="#">Connexion</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" aria-current="page" href="#">Inscription</a>
-                </li>
+                {% if not app.user %}
+                    <li class="nav-item active">
+                        <a class="nav-link {% if app.request.get('_route') == 'security_login' %}active{% endif %}" aria-current="page" href="{{ path('security_login') }}">Connexion</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link {% if app.request.get('_route') == 'security_register' %}active{% endif %}" aria-current="page" href="{{ path('security_register') }}">Inscription</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 {% block body %}{% endblock %}
-<footer class="text-muted py-5 bg-light text-dark">
+<footer class="text-muted py-5 bg-light text-dark mt-5">
     <div class="container">
         <p class="mb-1">Copyright &copy; 2021 - Sébastien Thuret P6 OpenClassrooms</p>
     </div>
