@@ -4,11 +4,13 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"username", "email"})
  */
 class User implements UserInterface
 {
@@ -21,7 +23,6 @@ class User implements UserInterface
 
     /**
      * @Assert\NotBlank
-     * @Assert\Unique
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private $username;
@@ -40,7 +41,6 @@ class User implements UserInterface
 
     /**
      * @Assert\NotBlank
-     * @Assert\Unique
      * @Assert\Email
      * @ORM\Column(type="string", length=255, unique=true)
      */

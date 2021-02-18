@@ -28,9 +28,9 @@ class Picture
     private $trick;
 
     /**
-     * @ORM\ManyToOne(targetEntity=TrickGroup::class, inversedBy="pictures")
+     * @ORM\ManyToOne(targetEntity=TrickCategory::class, inversedBy="pictures")
      */
-    private $trickGroup;
+    private $trickCategory;
 
     public function getId(): ?int
     {
@@ -61,14 +61,14 @@ class Picture
         return $this;
     }
 
-    public function getTrickGroup(): ?TrickGroup
+    public function getTrickCategory(): ?TrickCategory
     {
-        return $this->trickGroup;
+        return $this->trickCategory;
     }
 
-    public function setTrickGroup(?TrickGroup $trickGroup): self
+    public function setTrickCategory(?TrickCategory $trickCategory): self
     {
-        $this->trickGroup = $trickGroup;
+        $this->trickCategory = $trickCategory;
 
         return $this;
     }

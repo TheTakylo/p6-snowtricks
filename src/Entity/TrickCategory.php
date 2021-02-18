@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\TrickGroupRepository;
+use App\Repository\TrickCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TrickGroupRepository::class)
+ * @ORM\Entity(repositoryClass=TrickCategoryRepository::class)
  */
-class TrickGroup
+class TrickCategory
 {
     /**
      * @ORM\Id
@@ -30,7 +30,7 @@ class TrickGroup
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="trick_group")
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="trick_category")
      */
     private $tricks;
 
@@ -40,7 +40,7 @@ class TrickGroup
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="trickGroup")
+     * @ORM\OneToMany(targetEntity=Picture::class, mappedBy="trickCategory")
      */
     private $pictures;
 
@@ -91,7 +91,7 @@ class TrickGroup
     {
         if (!$this->tricks->contains($trick)) {
             $this->tricks[] = $trick;
-            $trick->setTrickGroup($this);
+            $trick->setTrickCategory($this);
         }
 
         return $this;
@@ -101,8 +101,8 @@ class TrickGroup
     {
         if ($this->tricks->removeElement($trick)) {
             // set the owning side to null (unless already changed)
-            if ($trick->getTrickGroup() === $this) {
-                $trick->setTrickGroup(null);
+            if ($trick->getTrickCategory() === $this) {
+                $trick->setTrickCategory(null);
             }
         }
 
@@ -133,7 +133,7 @@ class TrickGroup
     {
         if (!$this->pictures->contains($picture)) {
             $this->pictures[] = $picture;
-            $picture->setTrickGroup($this);
+            $picture->setTrickCategory($this);
         }
 
         return $this;
@@ -143,8 +143,8 @@ class TrickGroup
     {
         if ($this->pictures->removeElement($picture)) {
             // set the owning side to null (unless already changed)
-            if ($picture->getTrickGroup() === $this) {
-                $picture->setTrickGroup(null);
+            if ($picture->getTrickCategory() === $this) {
+                $picture->setTrickCategory(null);
             }
         }
 
