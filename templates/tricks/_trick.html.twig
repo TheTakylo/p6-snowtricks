@@ -2,7 +2,7 @@
     <a href="{{ path('trick_show', {category_slug: trick.trickCategory.slug, trick_slug: trick.slug}) }}" class="text-decoration-none text-dark">
         <div class="card">
             <div class="card-head">
-                <img src="https://via.placeholder.com/300x175" class="img-fluid" alt="">
+                <img src="{% if trick.image %}{{ asset('uploads/images/' ~ trick.image.filename) }}{% else %}{{ asset('build/images/default.png') }}{% endif %}" class="img-fluid" alt="">
             </div>
             <div class="card-body">
                 {{ trick.name }}
