@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,6 +47,16 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $email;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrickComment::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $trickComments;
+
+    public function __construct()
+    {
+        $this->trickComments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -130,6 +142,36 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickComment[]
+     */
+    public function getTrickComments(): Collection
+    {
+        return $this->trickComments;
+    }
+
+    public function addTrickComment(TrickComment $trickComment): self
+    {
+        if (!$this->trickComments->contains($trickComment)) {
+            $this->trickComments[] = $trickComment;
+            $trickComment->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrickComment(TrickComment $trickComment): self
+    {
+        if ($this->trickComments->removeElement($trickComment)) {
+            // set the owning side to null (unless already changed)
+            if ($trickComment->getUser() === $this) {
+                $trickComment->setUser(null);
+            }
+        }
 
         return $this;
     }
