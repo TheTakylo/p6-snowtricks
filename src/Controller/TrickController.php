@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Trick;
 use App\Entity\TrickCategory;
+use App\Entity\TrickComment;
+use App\Form\TrickCommentType;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
 use App\Service\FileUploader;
@@ -79,15 +81,32 @@ class TrickController extends AbstractController
      * @Route("/tricks/{category_slug}/{trick_slug}", name="trick_show")
      * @param TrickCategory $trickCategory
      * @param Trick $trick
+     * @param Request $request
+     * @return Response
      * @Entity("trickCategory", expr="repository.findOneBySlug(category_slug)")
      * @Entity("trick", expr="repository.findOneBySlugAndCategorySlug(trick_slug, category_slug)")
-     * @return Response
      */
-    public function show(TrickCategory $trickCategory, Trick $trick): Response
+    public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em): Response
     {
+        $trickComment = new TrickComment();
+        $form = $this->createForm(TrickCommentType::class, $trickComment);
+
+        $form->handleRequest($request);
+
+        if ($this->getUser() && $form->isSubmitted() && $form->isValid()) {
+            $trickComment->setUser($this->getUser());
+            $trickComment->setTrick($trick);
+
+            $em->persist($trickComment);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre commentaire a bien été ajouté');
+        }
+
         return $this->render('tricks/show.html.twig', [
             'trick'         => $trick,
-            'trickCategory' => $trickCategory
+            'trickCategory' => $trickCategory,
+            'form'          => $form->createView()
         ]);
     }
 
