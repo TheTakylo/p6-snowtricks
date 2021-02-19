@@ -94,7 +94,7 @@ class UserController extends AbstractController
 
                 $message = (new \Swift_Message('Hello Email'))
                     ->setFrom('send@example.com')
-                    ->setTo('sebastien.thuret@yahoo.fr')
+                    ->setTo($user->getEmail())
                     ->setBody(
                         $this->renderView(
                             'emails/reset_password_link.html.twig',
