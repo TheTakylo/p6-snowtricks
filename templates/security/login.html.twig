@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
@@ -25,6 +25,8 @@
                         <button class="btn btn-primary mt-3" type="submit">
                             Se connecter
                         </button>
+
+                        <a href="{{ path('user_reset_password') }}" class="float-end mt-4 small text-secondary">Mot de passe oublié</a>
                     </form>
                 </div>
             </div>

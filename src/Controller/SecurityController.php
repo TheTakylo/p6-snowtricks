@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -19,10 +19,10 @@ class SecurityController extends AbstractController
      * @Route("/register", name="security_register")
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @param PasswordEncoderInterface $encoder
+     * @param UserPasswordEncoderInterface $encoder
      * @return Response
      */
-    public function register(Request $request, EntityManagerInterface $em, PasswordEncoderInterface $encoder): Response
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('pages_index');

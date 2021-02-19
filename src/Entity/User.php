@@ -56,8 +56,20 @@ class User implements UserInterface
      */
     private $lastname;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $validated;
+
+    /**
+     * @ORM\OneToOne(targetEntity=UserResetPasswordToken::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $userResetPasswordToken;
+
     public function __construct()
     {
+        $this->validated = false;
+
         $this->trickComments = new ArrayCollection();
     }
 
@@ -176,6 +188,35 @@ class User implements UserInterface
     public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(bool $validated): self
+    {
+        $this->validated = $validated;
+
+        return $this;
+    }
+
+    public function getUserResetPasswordToken(): ?UserResetPasswordToken
+    {
+        return $this->userResetPasswordToken;
+    }
+
+    public function setUserResetPasswordToken(UserResetPasswordToken $userResetPasswordToken): self
+    {
+        // set the owning side of the relation if necessary
+        if ($userResetPasswordToken->getUser() !== $this) {
+            $userResetPasswordToken->setUser($this);
+        }
+
+        $this->userResetPasswordToken = $userResetPasswordToken;
 
         return $this;
     }
