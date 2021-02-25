@@ -8,9 +8,20 @@
             <h1>Ajouter une figure</h1>
 
             {{ form_start(form) }}
-            {{ form_row(form) }}
 
-            <button type="submit" class="btn btn-primary mt-3">Valider</button>
+            {{ form_row(form.name, {'label': 'Nom'}) }}
+            <div class="mt-3">
+                {{ form_row(form.description, {'label': 'Description'}) }}
+            </div>
+            <div class="mt-3">
+                {{ form_row(form.trickCategory, {'label': 'Catégorie'}) }}
+            </div>
+            <div class="mt-3 collection-group">
+                    {{ form_row(form.images, {'label': 'Images'}) }}
+                <button type="button" class="mt-3 btn btn-secondary collection-add">Ajouter</button>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-5">Valider</button>
             {{ form_end(form) }}
         </div>
     </div>

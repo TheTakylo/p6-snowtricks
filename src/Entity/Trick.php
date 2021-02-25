@@ -58,21 +58,21 @@ class Trick
     private $updatedAt;
 
     /**
-     * @ORM\OneToOne(targetEntity=Image::class, cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $image;
-
-    /**
      * @ORM\OneToMany(targetEntity=TrickComment::class, mappedBy="trick", orphanRemoval=true)
      */
     private $trickComments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="trick", cascade={"persist"})
+     */
+    private $images;
 
     public function __construct()
     {
         $this->videos = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->trickComments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -182,18 +182,6 @@ class Trick
         return $this;
     }
 
-    public function getImage(): ?Image
-    {
-        return $this->image;
-    }
-
-    public function setImage(?Image $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
     /**
      * @return Collection|TrickComment[]
      */
@@ -218,6 +206,36 @@ class Trick
             // set the owning side to null (unless already changed)
             if ($trickComment->getTrick() === $this) {
                 $trickComment->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Image[]
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image): self
+    {
+        if (!$this->images->contains($image)) {
+            $this->images[] = $image;
+            $image->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeImage(Image $image): self
+    {
+        if ($this->images->removeElement($image)) {
+            // set the owning side to null (unless already changed)
+            if ($image->getTrick() === $this) {
+                $image->setTrick(null);
             }
         }
 
