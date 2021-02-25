@@ -7,6 +7,7 @@ use App\Entity\TrickCategory;
 use App\Entity\TrickComment;
 use App\Form\TrickCommentType;
 use App\Form\TrickType;
+use App\Repository\TrickCommentRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
@@ -107,8 +108,27 @@ class TrickController extends AbstractController
      * @Entity("trickCategory", expr="repository.findOneBySlug(category_slug)")
      * @Entity("trick", expr="repository.findOneBySlugAndCategorySlug(trick_slug, category_slug)")
      */
-    public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em): Response
+    public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em, TrickCommentRepository $trickCommentRepository): Response
     {
+        $pageSize = 10;
+        $page = $request->query->getInt('page', 1);
+        $totalPages = 0;
+        $comments = [];
+
+        $commentsCount = $trickCommentRepository->count(['trick' => $trick]);
+
+        if ($commentsCount) {
+            $totalPages = ceil($commentsCount / $pageSize);
+
+            if ($page > $totalPages) {
+                $page = $totalPages;
+            }
+
+            $offset = ($page - 1) * $pageSize;
+
+            $comments = $trickCommentRepository->findBy(['trick' => $trick], ['createdAt' => 'ASC'], $pageSize, $offset);
+        }
+
         $trickComment = new TrickComment();
         $form = $this->createForm(TrickCommentType::class, $trickComment);
 
@@ -122,12 +142,16 @@ class TrickController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté');
+            return $this->redirect($request->getUri());
         }
 
         return $this->render('tricks/show.html.twig', [
-            'trick'         => $trick,
-            'trickCategory' => $trickCategory,
-            'form'          => $form->createView()
+            'trick'           => $trick,
+            'trickCategory'   => $trickCategory,
+            'comments'        => $comments,
+            'paginateTotal'   => $totalPages,
+            'paginateCurrent' => $page,
+            'form'            => $form->createView()
         ]);
     }
 

@@ -63,11 +63,11 @@
         </div>
         <hr>
     </div>
-    <div class="container">
+    <div class="container" id="comments">
         <div class="card">
             <div class="card-header">Commentaires</div>
             <div class="card-body">
-                {% for comment in trick.trickComments %}
+                {% for comment in comments %}
                     <div class="d-flex text-muted pt-3">
                         <img src="https://www.gravatar.com/avatar/d" alt="" class="bd-placeholder-img flex-shrink-0 me-2 rounded" style="max-height: 55px;">
                         <div class="pb-4 border-bottom w-100">
@@ -81,6 +81,21 @@
                 {% endfor %}
             </div>
         </div>
+        {% if comments and paginateTotal > 1 %}
+            <nav class="my-2">
+                <ul class="pagination">
+                    <li class="page-item {% if paginateCurrent == 1 %}disabled{% endif %}">
+                        <a class="page-link" href="{% if paginateCurrent == 1 %}#{% else %}?page={{ paginateCurrent - 1 }}#comments{% endif %}">Précédent</a>
+                    </li>
+                    {% for i in 1..paginateTotal %}
+                        <li class="page-item {% if paginateCurrent == i %}active{% endif %}"><a class="page-link" href="?page={{ i }}#comments">{{ i }}</a></li>
+                    {% endfor %}
+                    <li class="page-item {% if paginateCurrent == paginateTotal %}disabled{% endif %}">
+                        <a class="page-link" href="{% if paginateCurrent == paginateTotal %}#{% else %}?page={{ paginateCurrent + 1 }}#comments{% endif %}">Suivant</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
         {% if app.user %}
             {{ form_start(form) }}
             <div class="mt-4">
