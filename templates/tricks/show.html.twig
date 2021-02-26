@@ -17,13 +17,12 @@
             </div>
             <p class="mt-5">
                 {{ trick.description|raw }}
-
             </p>
             <hr class="mt-5">
             <div class="d-flex justify-content-between">
                 <div>
                     <span>Catégorie: </span>
-                    <a href="{{ path('trick_list_group', {slug: trick.trickGroup.slug}) }}"><span class="badge bg-primary">{{ trick.trickGroup.name }}</span></a>
+                    <a href="{{ path('trick_list', {slug: trick.trickGroup.slug}) }}"><span class="badge bg-primary">{{ trick.trickGroup.name }}</span></a>
                 </div>
                 <div>
                     <span class="fst-italic fs-6 text-secondary">

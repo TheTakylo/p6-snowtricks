@@ -8,11 +8,12 @@ use App\Repository\TrickRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 class TrickController extends AbstractController
 {
-
     /**
+     * @Route("/tricks/{group_slug}/{trick_slug}", name="trick_show")
      * @param TrickGroup $trickGroup
      * @param Trick $trick
      * @Entity("trickGroup", expr="repository.findOneBySlug(group_slug)")
@@ -28,11 +29,12 @@ class TrickController extends AbstractController
     }
 
     /**
+     * @Route("/tricks/{slug?}", name="trick_list")
      * @param TrickRepository $trickRepository
      * @param TrickGroup|null $trickGroup
      * @return Response
      */
-    public function list(?TrickGroup $trickGroup, TrickRepository $trickRepository): Response
+    public function list(TrickRepository $trickRepository, ?TrickGroup $trickGroup = null): Response
     {
         $tricks = $trickRepository->findList($trickGroup);
 
