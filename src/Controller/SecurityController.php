@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\UserValidationToken;
 use App\Form\UserRegistrationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,7 @@ class SecurityController extends AbstractController
      * @param UserPasswordEncoderInterface $encoder
      * @return Response
      */
-    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('pages_index');
@@ -36,10 +37,31 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
+            $userValidationToken = new UserValidationToken();
+
+            $token = sha1(random_bytes(32));
+
+            $userValidationToken->setUser($user);
+            $userValidationToken->setCreatedAt(new \DateTime());
+            $userValidationToken->setToken($token);
+
+            $em->persist($userValidationToken);
             $em->persist($user);
             $em->flush();
 
-            // TODO: alert success
+            $message = (new \Swift_Message('Hello Email'))
+                ->setFrom('send@example.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'emails/activate_user.html.twig',
+                        ['user' => $user, 'token' => $token]
+                    ), 'text/html'
+                );
+
+            $mailer->send($message);
+
+            $this->addFlash('success', 'Un lien d\'activation a été envoyé à l\'adresse email indiqué');
 
             return $this->redirectToRoute('security_login');
         }

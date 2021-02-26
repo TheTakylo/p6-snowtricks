@@ -66,6 +66,11 @@ class User implements UserInterface
      */
     private $userResetPasswordToken;
 
+    /**
+     * @ORM\OneToOne(targetEntity=UserValidationToken::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $userValidationToken;
+
     public function __construct()
     {
         $this->validated = false;
@@ -217,6 +222,23 @@ class User implements UserInterface
         }
 
         $this->userResetPasswordToken = $userResetPasswordToken;
+
+        return $this;
+    }
+
+    public function getUserValidationToken(): ?UserValidationToken
+    {
+        return $this->userValidationToken;
+    }
+
+    public function setUserValidationToken(UserValidationToken $userValidationToken): self
+    {
+        // set the owning side of the relation if necessary
+        if ($userValidationToken->getUser() !== $this) {
+            $userValidationToken->setUser($this);
+        }
+
+        $this->userValidationToken = $userValidationToken;
 
         return $this;
     }

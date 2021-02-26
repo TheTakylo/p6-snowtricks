@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserResetPasswordToken;
+use App\Entity\UserValidationToken;
 use App\Form\UserEditPasswordType;
 use App\Form\UserEditProfileType;
 use App\Form\UserResetPasswordType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -142,5 +144,29 @@ class UserController extends AbstractController
         return $this->render('user/new_password.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * TODO: param converter doesnt work
+     * @Route("/user/activate/{id}/{token}", name="user_activate")
+     * @ParamConverter("userValidationToken", class="App\Entity\UserValidationToken", options={"id": "user_id", "token": "token"})
+     * @param User $user
+     * @param UserValidationToken $userValidationToken
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function activate(User $user, UserValidationToken $userValidationToken, EntityManagerInterface $em): Response
+    {
+        dd($userValidationToken);
+        if ($user === $userValidationToken->getUser()) {
+            $user->setValidated(true);
+
+            $em->remove($userValidationToken);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre compte a bien été activé. Vous pouvez désormais vous connetcer');
+        }
+
+        return $this->redirectToRoute('security_login');
     }
 }
