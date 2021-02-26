@@ -6,6 +6,7 @@ use App\Repository\TrickRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @ORM\Entity(repositoryClass=TrickRepository::class)
@@ -30,10 +31,10 @@ class Trick
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=TrickGroup::class, inversedBy="tricks")
+     * @ORM\ManyToOne(targetEntity=TrickCategory::class, inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $trickGroup;
+    private $trickCategory;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
@@ -64,6 +65,8 @@ class Trick
     {
         $this->pictures = new ArrayCollection();
         $this->videos = new ArrayCollection();
+
+        $this->created_at = new \DateTime();
     }
 
     /**
@@ -105,14 +108,14 @@ class Trick
         return $this;
     }
 
-    public function getTrickGroup(): ?TrickGroup
+    public function getTrickCategory(): ?TrickCategory
     {
-        return $this->trickGroup;
+        return $this->trickCategory;
     }
 
-    public function setTrickGroup(?TrickGroup $trickGroup): self
+    public function setTrickCategory(?TrickCategory $trickCategory): self
     {
-        $this->trickGroup = $trickGroup;
+        $this->trickCategory = $trickCategory;
 
         return $this;
     }

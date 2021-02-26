@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
-use App\Entity\TrickGroup;
+use App\Entity\TrickCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -29,23 +29,23 @@ class TrickRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findOneBySlugAndGroupSlug(string $trickSlug, string $groupSlug)
+    public function findOneBySlugAndCategorySlug(string $trickSlug, string $categorySlug)
     {
         return $this->createQueryBuilder('t')
-            ->innerJoin('t.trickGroup', 'tg')
+            ->innerJoin('t.trickCategory', 'tg')
             ->where('t.slug = :trick_slug')->setParameter('trick_slug', $trickSlug)
-            ->andWhere('tg.slug = :group_slug')->setParameter('group_slug', $groupSlug)
+            ->andWhere('tg.slug = :category_slug')->setParameter('category_slug', $categorySlug)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findList(?TrickGroup $trickGroup)
+    public function findList(?TrickCategory $trickCategory)
     {
         $queryBuilder = $this->createQueryBuilder('t')
             ->orderBy('t.created_at', 'DESC');
 
-        if ($trickGroup) {
-            $queryBuilder->andWhere('t.trickGroup = :trick_group')->setParameter('trick_group', $trickGroup);
+        if ($trickCategory) {
+            $queryBuilder->andWhere('t.trickCategory = :trick_category')->setParameter('trick_category', $trickCategory);
         }
 
         return $queryBuilder->getQuery()

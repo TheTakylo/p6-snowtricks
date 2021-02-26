@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\TrickGroup;
+use App\Entity\TrickCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method TrickGroup|null find($id, $lockMode = null, $lockVersion = null)
- * @method TrickGroup|null findOneBy(array $criteria, array $orderBy = null)
- * @method TrickGroup[]    findAll()
- * @method TrickGroup[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method TrickCategory|null find($id, $lockMode = null, $lockVersion = null)
+ * @method TrickCategory|null findOneBy(array $criteria, array $orderBy = null)
+ * @method TrickCategory[]    findAll()
+ * @method TrickCategory[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TrickGroupRepository extends ServiceEntityRepository
+class TrickCategoryRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TrickGroup::class);
+        parent::__construct($registry, TrickCategory::class);
     }
 
     // /**
