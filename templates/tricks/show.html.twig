@@ -23,7 +23,7 @@
             <div class="d-flex justify-content-between">
                 <div>
                     <span>Catégorie: </span>
-                    <span class="badge bg-primary">{{ trick.trickGroup.name }}</span>
+                    <a href="{{ path('trick_list_group', {slug: trick.trickGroup.slug}) }}"><span class="badge bg-primary">{{ trick.trickGroup.name }}</span></a>
                 </div>
                 <div>
                     <span class="fst-italic fs-6 text-secondary">

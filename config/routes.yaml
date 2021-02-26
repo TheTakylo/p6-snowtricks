@@ -6,3 +6,12 @@ pages_index:
 trick_show:
   path: /tricks/{group_slug}/{trick_slug}
   controller: App\Controller\TrickController::show
+
+
+trick_list:
+  path: /tricks
+  controller: App\Controller\TrickController::list
+
+trick_list_group:
+  path: /tricks/{slug}
+  controller: App\Controller\TrickController::list

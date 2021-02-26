@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Trick;
+use App\Entity\TrickGroup;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,7 +23,7 @@ class TrickRepository extends ServiceEntityRepository
     public function findForHomePage()
     {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.id', 'DESC')
+            ->orderBy('t.created_at', 'DESC')
             ->setMaxResults(15)
             ->getQuery()
             ->getResult();
@@ -36,5 +37,18 @@ class TrickRepository extends ServiceEntityRepository
             ->andWhere('tg.slug = :group_slug')->setParameter('group_slug', $groupSlug)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function findList(?TrickGroup $trickGroup)
+    {
+        $queryBuilder = $this->createQueryBuilder('t')
+            ->orderBy('t.created_at', 'DESC');
+
+        if ($trickGroup) {
+            $queryBuilder->andWhere('t.trickGroup = :trick_group')->setParameter('trick_group', $trickGroup);
+        }
+
+        return $queryBuilder->getQuery()
+            ->getResult();
     }
 }
