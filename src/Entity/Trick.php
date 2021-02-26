@@ -45,9 +45,25 @@ class Trick
      */
     private $pictures;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick")
+     */
+    private $videos;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $created_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
+        $this->videos = new ArrayCollection();
     }
 
     /**
@@ -144,31 +160,55 @@ class Trick
     }
 
     /**
-     * @return Collection|TrickPicture[]
+     * @return Collection|Video[]
      */
-    public function getPictures(): Collection
+    public function getVideos(): Collection
     {
-        return $this->pictures;
+        return $this->videos;
     }
 
-    public function addPicture(TrickPicture $picture): self
+    public function addVideo(Video $video): self
     {
-        if (!$this->pictures->contains($picture)) {
-            $this->pictures[] = $picture;
-            $picture->setTrick($this);
+        if (!$this->videos->contains($video)) {
+            $this->videos[] = $video;
+            $video->setTrick($this);
+        }
+      
+      return $this;
+    }
+  
+    public function removeVideo(Video $video): self
+    {
+        if ($this->videos->removeElement($video)) {
+            // set the owning side to null (unless already changed)
+            if ($video->getTrick() === $this) {
+                $video->setTrick(null);
+            }
         }
 
         return $this;
     }
 
-    public function removePicture(TrickPicture $picture): self
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        if ($this->pictures->removeElement($picture)) {
-            // set the owning side to null (unless already changed)
-            if ($picture->getTrick() === $this) {
-                $picture->setTrick(null);
-            }
-        }
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }

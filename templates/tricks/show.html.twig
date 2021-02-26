@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% block body %}
+    <div id="trick-show">
+        <div class="container mt-5">
+            <img src="{{ asset('build/images/snow.jpg') }}" class="img-fluid picture-preview" alt="">
+            <div class="pictures-attachments d-flex mt-4">
+                <img src="{{ asset('build/images/snow.jpg') }}" style="height: 160px; width: 250px;" class="img-thumbnail" alt="">
+                <img src="{{ asset('build/images/snow.jpg') }}" style="height: 160px; width: 250px;" class="img-thumbnail" alt="">
+                <img src="{{ asset('build/images/snow.jpg') }}" style="height: 160px; width: 250px;" class="img-thumbnail" alt="">
+                {% for video in trick.videos %}
+                    <iframe class="img-thumbnail" height="160" width="250" src="https://www.youtube.com/embed/{{ video.youtubeId }}" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                {% endfor %}
+            </div>
+            <p class="mt-5">
+                {{ trick.description|raw }}
+
+            </p>
+            <hr class="mt-5">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <span>Catégorie: </span>
+                    <span class="badge bg-primary">{{ trick.trickGroup.name }}</span>
+                </div>
+                <div>
+                    <span class="fst-italic fs-6 text-secondary">
+                        <strong>Ajouté le:</strong> {{ trick.createdAt|date('d/m/Y à h:i') }}
+                        {% if trick.updatedAt %}
+                            <br>
+                            <strong>Dernière modification le:</strong> {{ trick.updatedAt|date('d/m/Y à h:i') }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+{% endblock %}
