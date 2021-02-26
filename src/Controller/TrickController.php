@@ -8,11 +8,9 @@ use App\Entity\TrickComment;
 use App\Form\TrickCommentType;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
-use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,10 +23,9 @@ class TrickController extends AbstractController
      * @param Request $request
      * @param SluggerInterface $slugger
      * @param EntityManagerInterface $em
-     * @param FileUploader $fileUploader
      * @return Response
      */
-    public function new(Request $request, SluggerInterface $slugger, EntityManagerInterface $em, FileUploader $fileUploader): Response
+    public function new(Request $request, SluggerInterface $slugger, EntityManagerInterface $em): Response
     {
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
@@ -36,16 +33,44 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $file = $form->get('image')->get('image')->getData();
-
-            if ($file) {
-                $fileName = $fileUploader->upload($file);
-                $trick->getImage()->setFilename($fileName);
-            }
-
             $trick->setSlug(strtolower($slugger->slug($trick->getName())));
             $em->persist($trick);
             $em->flush();
+
+            return $this->redirectToRoute('trick_show', [
+                'category_slug' => $trick->getTrickCategory()->getSlug(),
+                'trick_slug'    => $trick->getSlug()
+            ]);
+        }
+
+        return $this->render('tricks/form.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/tricks/edit/{id}", name="trick_edit")
+     * @param Trick $trick
+     * @param SluggerInterface $slugger
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function edit(Trick $trick, SluggerInterface $slugger, Request $request, EntityManagerInterface $em)
+    {
+        $form = $this->createForm(TrickType::class, $trick);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $trick->setSlug(strtolower($slugger->slug($trick->getName())));
+            $em->persist($trick);
+            $em->flush();
+
+            return $this->redirectToRoute('trick_show', [
+                'category_slug' => $trick->getTrickCategory()->getSlug(),
+                'trick_slug'    => $trick->getSlug()
+            ]);
         }
 
         return $this->render('tricks/form.html.twig', [
@@ -58,16 +83,11 @@ class TrickController extends AbstractController
      * @param Trick $trick
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @param Filesystem $filesystem
      * @return Response
      */
-    public function delete(Trick $trick, Request $request, EntityManagerInterface $em, Filesystem $filesystem): Response
+    public function delete(Trick $trick, Request $request, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete-trick-' . $trick->getId(), $request->get('_csrf_token'))) {
-            if ($trick->getImage()) {
-                $filesystem->remove($this->getParameter('images_directory') . '/' . $trick->getImage()->getFilename());
-            }
-
             $em->remove($trick);
             $em->flush();
 
@@ -82,6 +102,7 @@ class TrickController extends AbstractController
      * @param TrickCategory $trickCategory
      * @param Trick $trick
      * @param Request $request
+     * @param EntityManagerInterface $em
      * @return Response
      * @Entity("trickCategory", expr="repository.findOneBySlug(category_slug)")
      * @Entity("trick", expr="repository.findOneBySlugAndCategorySlug(trick_slug, category_slug)")

@@ -7,22 +7,25 @@
         <div class="container">
             <div id="trickMediaCarousel" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    {% for k, image in trick.images %}
+                        <button type="button" {% if k == 0 %}class="active" aria-current="true"{% endif %} data-bs-target="#trickMediaCarousel" data-bs-slide-to="{{ k }}"
+                                aria-label="Slide 1"></button>
+                    {% endfor %}
                 </div>
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="{% if trick.image %}{{ asset('uploads/images/' ~ trick.image.filename) }}{% else %}{{ asset('build/images/default.png') }}{% endif %}" class="d-block w-100" alt="">
-                    </div>
+                    {% for k, image in trick.images %}
+                        <div class="carousel-item {% if k == 0 %}active{% endif %}">
+                            <img src="{{ asset('uploads/images/' ~ image.filename) }}" class="d-block w-100" alt="">
+                        </div>
+                    {% endfor %}
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
+                    <span class="visually-hidden">Précédent</span>
                 </button>
                 <button class="carousel-control-next" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
+                    <span class="visually-hidden">Suivant</span>
                 </button>
             </div>
         </div>
@@ -69,7 +72,7 @@
                         <img src="https://www.gravatar.com/avatar/d" alt="" class="bd-placeholder-img flex-shrink-0 me-2 rounded" style="max-height: 55px;">
                         <div class="pb-4 border-bottom w-100">
                             <div class="d-flex justify-content-between">
-                                <strong class="text-gray-dark">John Doe</strong>
+                                <strong class="text-gray-dark">{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
                                 <span class="small">Le {{ comment.createdAt|date('d/m/y à h:i:s') }}</span>
                             </div>
                             <span class="d-block">{{ comment.message }}</span>

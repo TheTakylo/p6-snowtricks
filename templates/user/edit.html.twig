@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil{% endblock %}
+
+{% block body %}
+    <div class="bg-light py-5" style="min-height: 200px;">
+        <div class="container">
+            <img src="https://www.gravatar.com/avatar/d" alt="" class="d-inline-block float-start">
+            <div class="ms-3 d-inline-block">
+                <h1>Mon profil</h1>
+                <span class="small text-secondary"></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card mt-3">
+                    <div class="card-header"><i class="bi bi-person-circle me-2"></i>Mes informations</div>
+                    <div class="card-body">
+                        {{ form_start(formProfile) }}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(formProfile.firstname, {'label': 'Prénom'}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(formProfile.lastname, {'label': 'Nom'}) }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3 float-end">Modifier mon profil</button>
+                        {{ form_end(formProfile) }}
+                    </div>
+                </div>
+                <div class="card mt-5">
+                    <div class="card-header"><i class="bi bi-shield-lock-fill me-2"></i>Mot de passe</div>
+                    <div class="card-body">
+                        <div class="card-body">
+                            {{ form_start(formPassword) }}
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(formPassword.password.first, {'label': 'Mot de passe'}) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(formPassword.password.second, {'label': 'Confirmer le mot de passe'}) }}
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-3 float-end">Modifier mon mot de passe</button>
+                            {{ form_end(formPassword) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

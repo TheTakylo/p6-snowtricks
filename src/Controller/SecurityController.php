@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserRegistrationType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -16,9 +18,11 @@ class SecurityController extends AbstractController
     /**
      * @Route("/register", name="security_register")
      * @param Request $request
+     * @param EntityManagerInterface $em
+     * @param UserPasswordEncoderInterface $encoder
      * @return Response
      */
-    public function register(Request $request): Response
+    public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('pages_index');
@@ -30,7 +34,14 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO
+            $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
+
+            $em->persist($user);
+            $em->flush();
+
+            // TODO: alert success
+
+            return $this->redirectToRoute('security_login');
         }
 
         return $this->render('security/register.html.twig', [
