@@ -1,9 +1,9 @@
 {
   "devDependencies": {
+    "@popperjs/core": "^2.7.0",
     "bootstrap": "^5.0.0-beta1",
     "file-loader": "^6.0.0",
     "jquery": "^3.5.1",
-    "popper.js": "^1.16.1",
     "sass": "^1.32.6",
     "sass-loader": "^10.0.0",
     "ts-loader": "^8.0.1",

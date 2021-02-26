@@ -23,7 +23,7 @@ class TrickRepository extends ServiceEntityRepository
     public function findForHomePage()
     {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.created_at', 'DESC')
+            ->orderBy('t.createdAt', 'DESC')
             ->setMaxResults(15)
             ->getQuery()
             ->getResult();
@@ -42,7 +42,7 @@ class TrickRepository extends ServiceEntityRepository
     public function findList(?TrickCategory $trickCategory)
     {
         $queryBuilder = $this->createQueryBuilder('t')
-            ->orderBy('t.created_at', 'DESC');
+            ->orderBy('t.createdAt', 'DESC');
 
         if ($trickCategory) {
             $queryBuilder->andWhere('t.trickCategory = :trick_category')->setParameter('trick_category', $trickCategory);

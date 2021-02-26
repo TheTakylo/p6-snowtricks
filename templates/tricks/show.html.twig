@@ -5,15 +5,25 @@
 {% block body %}
     <div id="trick-show">
         <div class="container mt-5">
-            <img src="{{ asset('build/images/snow.jpg') }}" class="img-fluid picture-preview" alt="">
-            <div class="pictures-attachments d-flex mt-4">
-                <img src="{{ asset('build/images/snow.jpg') }}" style="height: 160px; width: 250px;" class="img-thumbnail" alt="">
-                <img src="{{ asset('build/images/snow.jpg') }}" style="height: 160px; width: 250px;" class="img-thumbnail" alt="">
-                <img src="{{ asset('build/images/snow.jpg') }}" style="height: 160px; width: 250px;" class="img-thumbnail" alt="">
-                {% for video in trick.videos %}
-                    <iframe class="img-thumbnail" height="160" width="250" src="https://www.youtube.com/embed/{{ video.youtubeId }}" frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                {% endfor %}
+            <div id="trickMediaCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{% if trick.image %}{{ asset('uploads/images/' ~ trick.image.filename) }}{% else %}{{ asset('build/images/default.png') }}{% endif %}" class="d-block w-100" alt="">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
             <p class="mt-5">
                 {{ trick.description|raw }}
