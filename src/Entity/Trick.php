@@ -66,6 +66,16 @@ class Trick
         $this->videos = new ArrayCollection();
     }
 
+    /**
+     * @ORM\OneToMany(targetEntity=TrickPicture::class, mappedBy="trick")
+     */
+    private $pictures;
+
+    public function __construct()
+    {
+        $this->pictures = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -163,10 +173,10 @@ class Trick
             $this->videos[] = $video;
             $video->setTrick($this);
         }
-
-        return $this;
+      
+      return $this;
     }
-
+  
     public function removeVideo(Video $video): self
     {
         if ($this->videos->removeElement($video)) {
