@@ -1,0 +1,4 @@
+Bonjour {{ user.firstname }} {{ user.lastname }} !
+Votre inscription a bien été prise en compte. Veuillez cliquer sur le lien afin d'activer votre compte.
+
+<a href="{{ absolute_url(path('user_activate', {id: user.id, token: token})) }}" target="_blank">Activer mon compte</a>

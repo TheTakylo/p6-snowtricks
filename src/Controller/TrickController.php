@@ -7,9 +7,11 @@ use App\Entity\TrickCategory;
 use App\Entity\TrickComment;
 use App\Form\TrickCommentType;
 use App\Form\TrickType;
+use App\Repository\TrickCommentRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +22,7 @@ class TrickController extends AbstractController
 {
     /**
      * @Route("/tricks/new", name="trick_new")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @param Request $request
      * @param SluggerInterface $slugger
      * @param EntityManagerInterface $em
@@ -44,12 +47,14 @@ class TrickController extends AbstractController
         }
 
         return $this->render('tricks/form.html.twig', [
-            'form' => $form->createView()
+            'form'  => $form->createView(),
+            'trick' => $trick
         ]);
     }
 
     /**
      * @Route("/tricks/edit/{id}", name="trick_edit")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @param Trick $trick
      * @param SluggerInterface $slugger
      * @param Request $request
@@ -74,12 +79,14 @@ class TrickController extends AbstractController
         }
 
         return $this->render('tricks/form.html.twig', [
-            'form' => $form->createView()
+            'form'  => $form->createView(),
+            'trick' => $trick
         ]);
     }
 
     /**
      * @Route("/tricks/delete/{id}", name="trick_delete")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @param Trick $trick
      * @param Request $request
      * @param EntityManagerInterface $em
@@ -107,8 +114,27 @@ class TrickController extends AbstractController
      * @Entity("trickCategory", expr="repository.findOneBySlug(category_slug)")
      * @Entity("trick", expr="repository.findOneBySlugAndCategorySlug(trick_slug, category_slug)")
      */
-    public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em): Response
+    public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em, TrickCommentRepository $trickCommentRepository): Response
     {
+        $pageSize = 10;
+        $page = $request->query->getInt('page', 1);
+        $totalPages = 0;
+        $comments = [];
+
+        $commentsCount = $trickCommentRepository->count(['trick' => $trick]);
+
+        if ($commentsCount) {
+            $totalPages = ceil($commentsCount / $pageSize);
+
+            if ($page > $totalPages) {
+                $page = $totalPages;
+            }
+
+            $offset = ($page - 1) * $pageSize;
+
+            $comments = $trickCommentRepository->findBy(['trick' => $trick], ['createdAt' => 'ASC'], $pageSize, $offset);
+        }
+
         $trickComment = new TrickComment();
         $form = $this->createForm(TrickCommentType::class, $trickComment);
 
@@ -122,12 +148,16 @@ class TrickController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Votre commentaire a bien été ajouté');
+            return $this->redirect($request->getUri());
         }
 
         return $this->render('tricks/show.html.twig', [
-            'trick'         => $trick,
-            'trickCategory' => $trickCategory,
-            'form'          => $form->createView()
+            'trick'           => $trick,
+            'trickCategory'   => $trickCategory,
+            'comments'        => $comments,
+            'paginateTotal'   => $totalPages,
+            'paginateCurrent' => $page,
+            'form'            => $form->createView()
         ]);
     }
 

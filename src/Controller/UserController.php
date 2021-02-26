@@ -4,12 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserResetPasswordToken;
+use App\Entity\UserValidationToken;
 use App\Form\UserEditPasswordType;
 use App\Form\UserEditProfileType;
 use App\Form\UserResetPasswordType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,7 +106,8 @@ class UserController extends AbstractController
 
                 $mailer->send($message);
             }
-            // TODO alert success
+
+            $this->addFlash('success', 'Les instructions de réinitialisation du mot de passe ont été envoyées à l\'adresse email indiquée');
         }
 
         return $this->render('user/reset_password.html.twig', [
@@ -114,27 +117,56 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password/new/{id}/{token}", name="user_new_password")
+     * @param User $user
+     * @param UserResetPasswordToken $userResetPasswordToken
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
      */
     public function newPassword(User $user, UserResetPasswordToken $userResetPasswordToken, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em, Request $request): Response
     {
         $form = $this->createForm(UserEditPasswordType::class, $user);
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
             $em->remove($userResetPasswordToken);
 
-            $em->persist($user);
             $em->flush();
 
-            // TODO alert success
+            $this->addFlash('success', 'Votre mot de passe a bien été modifié.');
+
             return $this->redirectToRoute('security_login');
         }
 
         return $this->render('user/new_password.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * TODO: param converter doesnt work
+     * @Route("/user/activate/{id}/{token}", name="user_activate")
+     * @ParamConverter("userValidationToken", class="App\Entity\UserValidationToken", options={"id": "user_id", "token": "token"})
+     * @param User $user
+     * @param UserValidationToken $userValidationToken
+     * @param EntityManagerInterface $em
+     * @return Response
+     */
+    public function activate(User $user, UserValidationToken $userValidationToken, EntityManagerInterface $em): Response
+    {
+        dd($userValidationToken);
+        if ($user === $userValidationToken->getUser()) {
+            $user->setValidated(true);
+
+            $em->remove($userValidationToken);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre compte a bien été activé. Vous pouvez désormais vous connetcer');
+        }
+
+        return $this->redirectToRoute('security_login');
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\UserResetPasswordTokenRepository;
+use App\Repository\UserValidationTokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=UserResetPasswordTokenRepository::class)
+ * @ORM\Entity(repositoryClass=UserValidationTokenRepository::class)
  */
-class UserResetPasswordToken
+class UserValidationToken
 {
     /**
      * @ORM\Id
@@ -18,7 +18,7 @@ class UserResetPasswordToken
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="userResetPasswordToken", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="userValidationToken", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
@@ -29,7 +29,7 @@ class UserResetPasswordToken
     private $token;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $createdAt;
 
