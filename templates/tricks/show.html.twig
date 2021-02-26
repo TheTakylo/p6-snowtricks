@@ -33,13 +33,11 @@
     <div class="container">
         {% if app.user %}
             <div class="my-3">
-                <form action="{{ path('trick_delete', {id: trick.id}) }}" method="post">
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete-trick-' ~ trick.id) }}">
-                    <button type="submit" class="btn btn-danger">
-                        <i class="bi bi-trash"></i>
-                        Supprimer
-                    </button>
-                </form>
+                {% include 'tricks/_delete.html.twig' with {trick: trick} %}
+                <a href="{{ path('trick_edit', {id: trick.id}) }}" class="btn btn-secondary">
+                    <i class="bi bi-pen"></i>
+                    Modifier
+                </a>
             </div>
         {% endif %}
         <p class="mt-5">

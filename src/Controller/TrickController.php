@@ -11,6 +11,7 @@ use App\Repository\TrickCommentRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,7 @@ class TrickController extends AbstractController
 {
     /**
      * @Route("/tricks/new", name="trick_new")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @param Request $request
      * @param SluggerInterface $slugger
      * @param EntityManagerInterface $em
@@ -45,12 +47,14 @@ class TrickController extends AbstractController
         }
 
         return $this->render('tricks/form.html.twig', [
-            'form' => $form->createView()
+            'form'  => $form->createView(),
+            'trick' => $trick
         ]);
     }
 
     /**
      * @Route("/tricks/edit/{id}", name="trick_edit")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @param Trick $trick
      * @param SluggerInterface $slugger
      * @param Request $request
@@ -75,12 +79,14 @@ class TrickController extends AbstractController
         }
 
         return $this->render('tricks/form.html.twig', [
-            'form' => $form->createView()
+            'form'  => $form->createView(),
+            'trick' => $trick
         ]);
     }
 
     /**
      * @Route("/tricks/delete/{id}", name="trick_delete")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      * @param Trick $trick
      * @param Request $request
      * @param EntityManagerInterface $em

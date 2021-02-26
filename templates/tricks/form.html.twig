@@ -5,6 +5,12 @@
 {% block body %}
     <div class="container mt-5">
         <div class="bg-light p-3 py-4 h-100">
+            {% if trick and trick.id %}
+                <a href="{{ path('trick_show', {category_slug: trick.trickCategory.slug, trick_slug: trick.slug}) }}" class="text-decoration-none mb-3">
+                    <i class="bi bi-arrow-left"></i>
+                    Retour à la figure
+                </a>
+            {% endif %}
             <h1>Ajouter une figure</h1>
 
             {{ form_start(form) }}
@@ -17,11 +23,16 @@
                 {{ form_row(form.trickCategory, {'label': 'Catégorie'}) }}
             </div>
             <div class="mt-3 collection-group">
-                    {{ form_row(form.images, {'label': 'Images'}) }}
+                {{ form_row(form.images, {'label': 'Images'}) }}
                 <button type="button" class="mt-3 btn btn-secondary collection-add">Ajouter</button>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-5">Valider</button>
+            <div class="mt-5">
+                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                {% if trick and trick.id %}
+                    {% include 'tricks/_delete.html.twig' with {trick: trick} %}
+                {% endif %}
+            </div>
             {{ form_end(form) }}
         </div>
     </div>
