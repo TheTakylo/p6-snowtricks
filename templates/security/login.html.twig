@@ -5,8 +5,9 @@
 {% block body %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-6 offset-3">
+            <div class="col-md-6 offset-md-3">
                 <div class="bg-light p-3 py-4 h-100">
+                    {% include 'partials/flash.html.twig' %}
                     <h1>Connexion</h1>
                     <form method="post" action="{{ path('security_login') }}">
                         {% if error %}
@@ -26,7 +27,10 @@
                             Se connecter
                         </button>
 
-                        <a href="{{ path('user_reset_password') }}" class="float-end mt-4 small text-secondary">Mot de passe oublié</a>
+                        <div class="float-end my-4">
+                            <a href="{{ path('security_register') }}" class="d-block small text-secondary">S'inscrire</a>
+                            <a href="{{ path('user_reset_password') }}" class="small text-secondary">Mot de passe oublié</a>
+                        </div>
                     </form>
                 </div>
             </div>

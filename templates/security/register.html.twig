@@ -5,7 +5,7 @@
 {% block body %}
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-6 offset-3">
+            <div class="col-md-6 offset-md-3">
                 <div class="bg-light p-3 py-4 h-100">
                     <h1>Inscription</h1>
                     {{ form_start(form) }}
@@ -26,6 +26,8 @@
                         {{ form_row(form.password, {'label': 'Mot de passe'}) }}
                     </div>
                     <button class="btn btn-primary mt-3" type="submit">S'inscrire</button>
+
+                    <a href="{{ path('security_login') }}" class="float-end mt-4 small text-secondary">Déjà un compte? Se connecter</a>
                     {{ form_end(form) }}
                 </div>
             </div>

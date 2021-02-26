@@ -18,7 +18,7 @@ class UserResetPasswordToken
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="userResetPasswordToken", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="userResetPasswordToken", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

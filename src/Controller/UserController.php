@@ -104,7 +104,8 @@ class UserController extends AbstractController
 
                 $mailer->send($message);
             }
-            // TODO alert success
+
+            $this->addFlash('success', 'Les instructions de réinitialisation du mot de passe ont été envoyées à l\'adresse email indiquée');
         }
 
         return $this->render('user/reset_password.html.twig', [
@@ -114,22 +115,27 @@ class UserController extends AbstractController
 
     /**
      * @Route("/password/new/{id}/{token}", name="user_new_password")
+     * @param User $user
+     * @param UserResetPasswordToken $userResetPasswordToken
+     * @param UserPasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $em
+     * @param Request $request
+     * @return Response
      */
     public function newPassword(User $user, UserResetPasswordToken $userResetPasswordToken, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em, Request $request): Response
     {
         $form = $this->createForm(UserEditPasswordType::class, $user);
 
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setPassword($encoder->encodePassword($user, $user->getPassword()));
 
             $em->remove($userResetPasswordToken);
 
-            $em->persist($user);
             $em->flush();
 
-            // TODO alert success
+            $this->addFlash('success', 'Votre mot de passe a bien été modifié.');
+
             return $this->redirectToRoute('security_login');
         }
 
