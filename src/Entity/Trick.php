@@ -75,16 +75,6 @@ class Trick
         $this->images = new ArrayCollection();
     }
 
-    /**
-     * @ORM\OneToMany(targetEntity=TrickPicture::class, mappedBy="trick")
-     */
-    private $pictures;
-
-    public function __construct()
-    {
-        $this->pictures = new ArrayCollection();
-    }
-
     public function getId(): ?int
     {
         return $this->id;
