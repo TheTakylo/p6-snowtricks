@@ -1,10 +1,6 @@
 @import '~bootstrap/scss/bootstrap';
 
 .tricks-container {
-  display: flex;
-
-  @include row-cols(5);
-
   .trick-card {
     img {
       height: 150px;
@@ -12,6 +8,10 @@
       object-fit: cover;
     }
   }
+}
+
+.badge-danger {
+  background-color: #dc3545 !important;
 }
 
 #trickMediaCarousel .carousel-inner img {

@@ -28,16 +28,19 @@ services:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
 
-
-
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%images_directory%'
 
+    App\Listener\Doctrine\VideoListener:
+        tags:
+            - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Video'}
+
     App\Listener\Doctrine\ImageListener:
         tags:
             - { name: 'doctrine.orm.entity_listener', event: 'prePersist', entity: 'App\Entity\Image' }
-            - { name: 'doctrine.orm.entity_listener', event: 'preRemove', entity: 'App\Entity\Image' }
+            - { name: 'doctrine.orm.entity_listener', event: 'postRemove', entity: 'App\Entity\Image' }
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

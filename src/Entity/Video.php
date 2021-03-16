@@ -18,15 +18,22 @@ class Video
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $youtubeId;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="videos")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $platform;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $videoId;
+
+    private $url;
 
     public function getId(): ?int
     {
@@ -45,14 +52,45 @@ class Video
         return $this;
     }
 
-    public function getYoutubeId(): ?string
+    public function getPlatform(): ?string
     {
-        return $this->youtubeId;
+        return $this->platform;
     }
 
-    public function setYoutubeId(string $youtubeId): self
+    public function setPlatform(string $platform): self
     {
-        $this->youtubeId = $youtubeId;
+        $this->platform = $platform;
+
+        return $this;
+    }
+
+    public function getVideoId(): ?string
+    {
+        return $this->videoId;
+    }
+
+    public function setVideoId(string $videoId): self
+    {
+        $this->videoId = $videoId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     * @return $this
+     */
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }

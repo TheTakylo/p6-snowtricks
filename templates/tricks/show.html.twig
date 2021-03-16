@@ -4,33 +4,44 @@
 
 {% block body %}
     <div id="trick-show" class="bg-light d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+        {% if trick.images is not empty %}
+            <div class="container">
+                <div id="trickMediaCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {% for k, image in trick.images %}
+                            <button type="button" {% if k == 0 %}class="active" aria-current="true"{% endif %} data-bs-target="#trickMediaCarousel" data-bs-slide-to="{{ k }}"
+                                    aria-label="Slide 1"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+                        {% for k, image in trick.images %}
+                            <div class="carousel-item {% if k == 0 %}active{% endif %}">
+                                <img src="{{ asset('uploads/images/' ~ image.filename) }}" class="d-block w-100" alt="">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Précédent</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Suivant</span>
+                    </button>
+                </div>
+            </div>
+        {% endif %}
         <div class="container">
-            <div id="trickMediaCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-indicators">
-                    {% for k, image in trick.images %}
-                        <button type="button" {% if k == 0 %}class="active" aria-current="true"{% endif %} data-bs-target="#trickMediaCarousel" data-bs-slide-to="{{ k }}"
-                                aria-label="Slide 1"></button>
-                    {% endfor %}
-                </div>
-                <div class="carousel-inner">
-                    {% for k, image in trick.images %}
-                        <div class="carousel-item {% if k == 0 %}active{% endif %}">
-                            <img src="{{ asset('uploads/images/' ~ image.filename) }}" class="d-block w-100" alt="">
-                        </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Précédent</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Suivant</span>
-                </button>
+            <div class="row">
+                {% for video in trick.videos %}
+                    <div class="col-md-3 mt-1">
+                            {{ videoServiceIframe(video) }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <div class="d-block d-md-none d-lg-none d-xl-none d-xxl-none text-center my-5" >
+    <div class="d-block d-md-none d-lg-none d-xl-none d-xxl-none text-center my-5">
         <button type="button" class="btn btn-secondary" data-controller="show-media">Afficher les médias</button>
     </div>
     <div class="container">
@@ -65,38 +76,9 @@
         <hr>
     </div>
     <div class="container" id="comments">
-        <div class="card">
-            <div class="card-header">Commentaires</div>
-            <div class="card-body">
-                {% for comment in comments %}
-                    <div class="d-flex text-muted pt-3">
-                        <img src="https://www.gravatar.com/avatar/d" alt="" class="bd-placeholder-img flex-shrink-0 me-2 rounded" style="max-height: 55px;">
-                        <div class="pb-4 border-bottom w-100">
-                            <div class="d-flex justify-content-between">
-                                <strong class="text-gray-dark">{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
-                                <span class="small">Le {{ comment.createdAt|date('d/m/y à h:i:s') }}</span>
-                            </div>
-                            <span class="d-block">{{ comment.message }}</span>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+        <div id="comments-ajax">
+            {% include 'tricks/_comments.html.twig' %}
         </div>
-        {% if comments and paginateTotal > 1 %}
-            <nav class="my-2">
-                <ul class="pagination">
-                    <li class="page-item {% if paginateCurrent == 1 %}disabled{% endif %}">
-                        <a class="page-link" href="{% if paginateCurrent == 1 %}#{% else %}?page={{ paginateCurrent - 1 }}#comments{% endif %}">Précédent</a>
-                    </li>
-                    {% for i in 1..paginateTotal %}
-                        <li class="page-item {% if paginateCurrent == i %}active{% endif %}"><a class="page-link" href="?page={{ i }}#comments">{{ i }}</a></li>
-                    {% endfor %}
-                    <li class="page-item {% if paginateCurrent == paginateTotal %}disabled{% endif %}">
-                        <a class="page-link" href="{% if paginateCurrent == paginateTotal %}#{% else %}?page={{ paginateCurrent + 1 }}#comments{% endif %}">Suivant</a>
-                    </li>
-                </ul>
-            </nav>
-        {% endif %}
         {% if app.user %}
             {{ form_start(form) }}
             <div class="mt-4">
