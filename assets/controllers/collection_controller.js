@@ -2,47 +2,67 @@ import {Controller} from 'stimulus';
 
 export default class extends Controller {
 
-    $collection;
-    $container;
-    collection_prototype;
+    counter = 0;
+    id;
+    prototype;
+
+    addButton;
 
     connect() {
-        this.$collection = this.element;
+        this.prototype = this.element.getAttribute('data-prototype');
+        this.id = this.element.getAttribute('id');
 
-        const $collection_add = this.$collection.parentElement.parentElement.querySelector('.collection-add');
+        this.addButton = document.querySelector("#" + this.id + "_collection_add");
 
-        const $container = document.createElement('div');
-        $container.classList.add('row');
+        if (this.watchOld() === false) {
+            this.addPrototype();
+        }
 
-        this.$collection.append($container);
-
-        this.$container = $container;
-
-        this.collection_prototype = "<button type='button' class='btn btn-danger btn-sm collection-remove' data-id='__name__'>X</button>" + this.element.dataset['prototype'];
-
-        this.counter = 0;
-
-        this.addPrototype();
-
-        $collection_add.addEventListener('click', () => {
+        this.addButton.addEventListener('click', () => {
             this.addPrototype();
         })
     }
 
     addPrototype() {
-        let $div = document.createElement('div');
-        $div.classList.add('col-md-3');
-
         this.counter++;
 
-        $div.innerHTML = this.collection_prototype
-            .replaceAll('__name__label__', 'Image')
-            .replaceAll('__name__', this.counter);
+        let $div = document.createElement('div');
 
-        this.$container.append($div);
+        $div.innerHTML = this.prototype
+            .replaceAll('__name__label__', '')
+            .replaceAll('__name__', this.counter) + this.getDeleteButtonHTML();
 
-        $div.querySelector('button.collection-remove').addEventListener('click', () => {
+        $div.querySelector('legend.col-form-label').remove();
+
+        this.element.append($div);
+
+        $div.querySelector('button.collection-delete').addEventListener('click', () => {
             $div.remove();
+        })
+    }
+
+    watchOld() {
+        let result = false;
+
+        this.element.querySelectorAll('fieldset.form-group').forEach(i => {
+            i.querySelector('legend.col-form-label').remove();
+
+            let $div = document.createElement('div');
+            $div.innerHTML = this.getDeleteButtonHTML();
+
+            $div.addEventListener('click', () => {
+                $div.parentElement.remove();
+            })
+
+            i.append($div);
+
+            result = true;
         });
+
+        return result;
+    }
+
+    getDeleteButtonHTML() {
+        return "<button type='button' class='mt-1 collection-delete btn btn-sm btn-danger'>Supprimer</button>";
     }
 }

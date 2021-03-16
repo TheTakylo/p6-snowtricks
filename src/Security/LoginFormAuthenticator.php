@@ -48,7 +48,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
     public function getCredentials(Request $request)
     {
         $credentials = [
-            'email'   => $request->request->get('email'),
+            'email'      => $request->request->get('email'),
             'password'   => $request->request->get('password'),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
@@ -79,6 +79,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator implements P
 
     public function checkCredentials($credentials, UserInterface $user)
     {
+        if (!$user->getValidated()) {
+            throw new CustomUserMessageAuthenticationException("Le compte n'est pas encore activé. <a href='" . $this->urlGenerator->generate('user_new_activation_request', ['email' => $user->getEmail()]) . "'>Renvoyer l'email d'activation</a>");
+        }
+
         return $this->passwordEncoder->isPasswordValid($user, $credentials['password']);
     }
 

@@ -1,0 +1,32 @@
+<div class="card">
+    <div class="card-header">Commentaires</div>
+    <div class="card-body">
+        {% for comment in comments %}
+            <div class="d-flex text-muted pt-3">
+                <img src="https://www.gravatar.com/avatar/d" alt="" class="bd-placeholder-img flex-shrink-0 me-2 rounded" style="max-height: 55px;">
+                <div class="pb-4 border-bottom w-100">
+                    <div class="d-flex justify-content-between">
+                        <strong class="text-gray-dark">{{ comment.user.firstname }} {{ comment.user.lastname }}</strong>
+                        <span class="small">Le {{ comment.createdAt|date('d/m/y à h:i:s') }}</span>
+                    </div>
+                    <span class="d-block">{{ comment.message }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% if comments and paginateTotal > 1 %}
+    <nav class="my-2" data-controller="pagination" data-url="{{ absolute_url(path('trick_comments_load', {category_slug: trick.trickCategory.slug, trick_slug: trick.slug})) }}">
+        <ul class="pagination">
+            <li class="page-item {% if paginateCurrent == 1 %}disabled{% endif %}">
+                <a class="pagination-prev page-link" href="#comments">Précédent</a>
+            </li>
+            {% for i in 1..paginateTotal %}
+                <li class="page-item pagination-item {% if paginateCurrent == i %}active{% endif %}"><a class="page-link" href="#comments">{{ i }}</a></li>
+            {% endfor %}
+            <li class="page-item {% if paginateCurrent == paginateTotal %}disabled{% endif %}">
+                <a class="pagination-next page-link" href="#comments">Suivant</a>
+            </li>
+        </ul>
+    </nav>
+{% endif %}

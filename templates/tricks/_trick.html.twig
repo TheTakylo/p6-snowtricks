@@ -1,8 +1,8 @@
-<div class="px-2 trick-card">
+<div class="px-2 trick-card col-md-3 my-2">
     <a href="{{ path('trick_show', {category_slug: trick.trickCategory.slug, trick_slug: trick.slug}) }}" class="text-decoration-none text-dark">
         <div class="card">
             <div class="card-head">
-                <img src="{% if trick.images %}{{ asset('uploads/images/' ~ trick.images[0].filename) }}{% else %}{{ asset('build/images/default.png') }}{% endif %}" class="img-fluid" alt="">
+                <img src="{% if trick.images and trick.images[0] is defined %}{{ asset('uploads/images/' ~ trick.images[0].filename) }}{% else %}{{ asset('build/images/default.png') }}{% endif %}" class="img-fluid" alt="">
             </div>
             <div class="card-body d-flex justify-content-between align-items-center">
                 <span>{{ trick.name }}</span>

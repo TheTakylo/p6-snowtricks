@@ -4,29 +4,23 @@ namespace App\Listener\Doctrine;
 
 use App\Entity\Image;
 use App\Service\FileUploader;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ImageListener
 {
-    /** @var ContainerInterface $container */
-    private $container;
-
     /** @var FileUploader $fileUploader */
     private $fileUploader;
 
     /** @var Filesystem $filesystem */
     private $filesystem;
 
-    public function __construct(FileUploader $fileUploader, Filesystem $filesystem, ContainerInterface $container)
+    public function __construct(FileUploader $fileUploader, Filesystem $filesystem)
     {
-        $this->container = $container;
         $this->fileUploader = $fileUploader;
         $this->filesystem = $filesystem;
     }
 
-    public function prePersist(Image $image, LifecycleEventArgs $args)
+    public function prePersist(Image $image)
     {
         if ($image->getFile() === null) {
             return;
@@ -39,9 +33,8 @@ class ImageListener
         );
     }
 
-    public function preRemove(Image $image, LifecycleEventArgs $args)
+    public function postRemove(Image $image)
     {
-        // TODO: delete image when delete a trick
-        $this->filesystem->remove($this->container->getParameter('images_directory') . '/' . $image->getFilename());
+        $this->fileUploader->remove($image->getFilename());
     }
 }

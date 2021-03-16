@@ -43,7 +43,7 @@ class Trick
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick")
+     * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $videos;
 
@@ -63,7 +63,7 @@ class Trick
     private $trickComments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="trick", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="trick", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $images;
 

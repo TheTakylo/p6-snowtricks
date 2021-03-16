@@ -40,13 +40,12 @@ class TrickController extends AbstractController
             $em->persist($trick);
             $em->flush();
 
-            return $this->redirectToRoute('trick_show', [
-                'category_slug' => $trick->getTrickCategory()->getSlug(),
-                'trick_slug'    => $trick->getSlug()
+            return $this->redirectToRoute('trick_list', [
+                'slug' => $trick->getTrickCategory()->getSlug()
             ]);
         }
 
-        return $this->render('tricks/form.html.twig', [
+        return $this->render('tricks/add.html.twig', [
             'form'  => $form->createView(),
             'trick' => $trick
         ]);
@@ -78,7 +77,7 @@ class TrickController extends AbstractController
             ]);
         }
 
-        return $this->render('tricks/form.html.twig', [
+        return $this->render('tricks/edit.html.twig', [
             'form'  => $form->createView(),
             'trick' => $trick
         ]);
@@ -105,6 +104,46 @@ class TrickController extends AbstractController
     }
 
     /**
+     * @Route("/tricks/{category_slug}/{trick_slug}/comments", name="trick_comments_load")
+     * @param TrickCategory $trickCategory
+     * @param Trick $trick
+     * @param Request $request
+     * @param TrickCommentRepository $trickCommentRepository
+     * @return Response
+     * @Entity("trickCategory", expr="repository.findOneBySlug(category_slug)")
+     * @Entity("trick", expr="repository.findOneBySlugAndCategorySlug(trick_slug, category_slug)")
+     */
+    public function loadComments(TrickCategory $trickCategory, Trick $trick, Request $request, TrickCommentRepository $trickCommentRepository): Response
+    {
+        $pageSize = 2;
+        $page = $request->query->getInt('page', 1);
+        $totalPages = 0;
+        $comments = [];
+
+        $commentsCount = $trickCommentRepository->count(['trick' => $trick]);
+
+        if ($commentsCount) {
+            $totalPages = ceil($commentsCount / $pageSize);
+
+            if ($page > $totalPages) {
+                $page = $totalPages;
+            }
+
+            $offset = ($page - 1) * $pageSize;
+
+            $comments = $trickCommentRepository->findBy(['trick' => $trick], ['createdAt' => 'ASC'], $pageSize, $offset);
+        }
+
+        return $this->render('tricks/_comments.html.twig', [
+            'trick'           => $trick,
+            'trickCategory'   => $trickCategory,
+            'comments'        => $comments,
+            'paginateTotal'   => $totalPages,
+            'paginateCurrent' => $page,
+        ]);
+    }
+
+    /**
      * @Route("/tricks/{category_slug}/{trick_slug}", name="trick_show")
      * @param TrickCategory $trickCategory
      * @param Trick $trick
@@ -116,7 +155,7 @@ class TrickController extends AbstractController
      */
     public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em, TrickCommentRepository $trickCommentRepository): Response
     {
-        $pageSize = 10;
+        $pageSize = 2;
         $page = $request->query->getInt('page', 1);
         $totalPages = 0;
         $comments = [];
