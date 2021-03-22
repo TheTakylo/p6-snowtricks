@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore build"
+  },
   "devDependencies": {
     "@popperjs/core": "^2.7.0",
     "@symfony/stimulus-bridge": "^2.0.2",

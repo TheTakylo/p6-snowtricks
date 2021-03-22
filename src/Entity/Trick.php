@@ -32,30 +32,20 @@ class Trick
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     */
+    private $slug;
+
+    /**
      * @ORM\ManyToOne(targetEntity=TrickCategory::class, inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trickCategory;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
-    private $slug;
-
-    /**
      * @ORM\OneToMany(targetEntity=Video::class, mappedBy="trick", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $videos;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $createdAt;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity=TrickComment::class, mappedBy="trick", orphanRemoval=true)
@@ -66,6 +56,16 @@ class Trick
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="trick", orphanRemoval=true, cascade={"persist", "remove"})
      */
     private $images;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     public function __construct()
     {
@@ -142,10 +142,10 @@ class Trick
             $this->videos[] = $video;
             $video->setTrick($this);
         }
-      
-      return $this;
+
+        return $this;
     }
-  
+
     public function removeVideo(Video $video): self
     {
         if ($this->videos->removeElement($video)) {

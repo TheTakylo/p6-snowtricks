@@ -7,6 +7,7 @@ use App\Entity\TrickCategory;
 use App\Entity\TrickComment;
 use App\Form\TrickCommentType;
 use App\Form\TrickType;
+use App\Repository\TrickCategoryRepository;
 use App\Repository\TrickCommentRepository;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -40,8 +41,9 @@ class TrickController extends AbstractController
             $em->persist($trick);
             $em->flush();
 
-            return $this->redirectToRoute('trick_list', [
-                'slug' => $trick->getTrickCategory()->getSlug()
+            return $this->redirectToRoute('trick_show', [
+                'category_slug' => $trick->getTrickCategory()->getSlug(),
+                'trick_slug' => $trick->getSlug()
             ]);
         }
 
@@ -149,6 +151,7 @@ class TrickController extends AbstractController
      * @param Trick $trick
      * @param Request $request
      * @param EntityManagerInterface $em
+     * @param TrickCommentRepository $trickCommentRepository
      * @return Response
      * @Entity("trickCategory", expr="repository.findOneBySlug(category_slug)")
      * @Entity("trick", expr="repository.findOneBySlugAndCategorySlug(trick_slug, category_slug)")
@@ -203,11 +206,21 @@ class TrickController extends AbstractController
     /**
      * @Route("/tricks/{slug?}", name="trick_list")
      * @param TrickRepository $trickRepository
-     * @param TrickCategory|null $trickCategory
+     * @param TrickCategoryRepository $trickCategoryRepository
+     * @param string|null $slug
      * @return Response
      */
-    public function list(TrickRepository $trickRepository, ?TrickCategory $trickCategory = null): Response
+    public function list(TrickRepository $trickRepository, TrickCategoryRepository $trickCategoryRepository, $slug = null): Response
     {
+        $trickCategory = null;
+
+        if ($slug !== null) {
+            $trickCategory = $trickCategoryRepository->findOneBy(['slug' => $slug]);
+            if ($trickCategory === null) {
+                throw $this->createNotFoundException();
+            }
+        }
+
         $tricks = $trickRepository->findList($trickCategory);
 
         return $this->render('tricks/list.html.twig', [

@@ -3,7 +3,12 @@
 {% block title %}{{ trick.name }}{% endblock %}
 
 {% block body %}
-    <div id="trick-show" class="bg-light d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+    <div class="bg-light">
+        <div class="container">
+            <h1 class="py-4">{{ trick.name }}</h1>
+        </div>
+    </div>
+    <div id="trick-show" class="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
         {% if trick.images is not empty %}
             <div class="container">
                 <div id="trickMediaCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -35,7 +40,7 @@
             <div class="row">
                 {% for video in trick.videos %}
                     <div class="col-md-3 mt-1">
-                            {{ videoServiceIframe(video) }}
+                        {{ videoServiceIframe(video) }}
                     </div>
                 {% endfor %}
             </div>
@@ -46,7 +51,7 @@
     </div>
     <div class="container">
         {% if app.user %}
-            <div class="my-3">
+            <div class="my-3 user-trick-actions">
                 {% include 'tricks/_delete.html.twig' with {trick: trick, small: true} %}
                 <a href="{{ path('trick_edit', {id: trick.id}) }}" class="btn btn-secondary btn-sm">
                     <i class="bi bi-pen"></i>
