@@ -16,10 +16,12 @@
                 <img src="{{ asset('build/images/snow.jpg') }}" class="img-fluid" alt="">
             </div>
         </div>
-        <div class="tricks-container py-5 row">
-            {% for trick in tricks %}
-                {% include 'tricks/_trick.html.twig' %}
-            {% endfor %}
+        <div class="tricks-container py-5 row" data-total="{{ total }}" data-url="{{ absolute_url(path('pages_load_tricks')) }}">
+            {% include "tricks/_tricks.html.twig" %}
+
         </div>
+        <button type="button" class="btn btn-secondary d-block mx-auto" data-controller="load-more-tricks">
+            Voir plus
+        </button>
     </div>
 {% endblock %}
