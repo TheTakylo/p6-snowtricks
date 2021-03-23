@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la figure{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="bg-light p-3 py-4 h-100">
+            {% if trick and trick.id %}
+                <a href="{{ path('trick_show', {category_slug: trick.trickCategory.slug, trick_slug: trick.slug}) }}" class="text-decoration-none mb-3">
+                    <i class="bi bi-arrow-left"></i>
+                    Retour à la figure
+                </a>
+            {% endif %}
+            <h1>Modifier la figure</h1>
+
+            {% include 'tricks/_form.html.twig' %}
+            {% if trick and trick.id %}
+                {% include 'tricks/_delete.html.twig' with {trick: trick} %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

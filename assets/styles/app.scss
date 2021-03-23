@@ -1,0 +1,19 @@
+@import '~bootstrap/scss/bootstrap';
+
+.tricks-container {
+  .trick-card {
+    img {
+      height: 150px;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.badge-danger {
+  background-color: #dc3545 !important;
+}
+
+#trickMediaCarousel .carousel-inner img {
+  max-height: 600px;
+}

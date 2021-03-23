@@ -1,0 +1,7 @@
+<form action="{{ path('trick_delete', {id: trick.id}) }}" method="post" class="d-inline-block">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete-trick-' ~ trick.id) }}">
+    <button type="submit" class="btn btn-danger {% if small is defined %}btn-sm{% endif %}">
+        <i class="bi bi-trash"></i>
+        Supprimer
+    </button>
+</form>

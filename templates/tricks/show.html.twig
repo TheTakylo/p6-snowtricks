@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% block body %}
+    <div class="bg-light">
+        <div class="container">
+            <h1 class="py-4">{{ trick.name }}</h1>
+        </div>
+    </div>
+    <div id="trick-show" class="d-none d-md-block d-lg-block d-xl-block d-xxl-block">
+        {% if trick.images is not empty %}
+            <div class="container">
+                <div id="trickMediaCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {% for k, image in trick.images %}
+                            <button type="button" {% if k == 0 %}class="active" aria-current="true"{% endif %} data-bs-target="#trickMediaCarousel" data-bs-slide-to="{{ k }}"
+                                    aria-label="Slide 1"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+                        {% for k, image in trick.images %}
+                            <div class="carousel-item {% if k == 0 %}active{% endif %}">
+                                <img src="{{ asset('uploads/images/' ~ image.filename) }}" class="d-block w-100" alt="">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Précédent</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#trickMediaCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Suivant</span>
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+        <div class="container">
+            <div class="row">
+                {% for video in trick.videos %}
+                    <div class="col-md-3 mt-1">
+                        {{ videoServiceIframe(video) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="d-block d-md-none d-lg-none d-xl-none d-xxl-none text-center my-5">
+        <button type="button" class="btn btn-secondary" data-controller="show-media">Afficher les médias</button>
+    </div>
+    <div class="container">
+        {% if app.user %}
+            <div class="my-3 user-trick-actions">
+                {% include 'tricks/_delete.html.twig' with {trick: trick, small: true} %}
+                <a href="{{ path('trick_edit', {id: trick.id}) }}" class="btn btn-secondary btn-sm">
+                    <i class="bi bi-pen"></i>
+                    Modifier
+                </a>
+            </div>
+        {% endif %}
+        <p class="mt-5">
+            {{ trick.description|raw }}
+        </p>
+        <hr class="mt-5">
+        <div class="d-flex justify-content-between">
+            <div>
+                <span>Catégorie: </span>
+                <a href="{{ path('trick_list', {slug: trick.trickCategory.slug}) }}"><span class="badge bg-primary">{{ trick.trickCategory.name }}</span></a>
+            </div>
+            <div>
+                    <span class="fst-italic fs-6 text-secondary">
+                        <strong>Ajouté le:</strong> {{ trick.createdAt|date('d/m/Y à h:i') }}
+                        {% if trick.updatedAt %}
+                            <br>
+                            <strong>Dernière modification le:</strong> {{ trick.updatedAt|date('d/m/Y à h:i') }}
+                        {% endif %}
+                    </span>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="container" id="comments">
+        <div id="comments-ajax">
+            {% include 'tricks/_comments.html.twig' %}
+        </div>
+        {% if app.user %}
+            {{ form_start(form) }}
+            <div class="mt-4">
+                {{ form_row(form.message) }}
+                <button class="btn btn-primary mt-3" type="submit">Valider</button>
+            </div>
+            {{ form_end(form) }}
+        {% else %}
+            <div class="alert alert-secondary">Vous devez <a href="{{ path('security_login') }}">être connecté</a> afin de pouvoir écrire un message</div>
+        {% endif %}
+    </div>
+{% endblock %}
