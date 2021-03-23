@@ -42,16 +42,13 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity=TrickComment::class, mappedBy="user", orphanRemoval=true)
-     */
-    private $trickComments;
-
-    /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
 
     /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $lastname;
@@ -60,6 +57,11 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $validated;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TrickComment::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $trickComments;
 
     /**
      * @ORM\OneToOne(targetEntity=UserResetPasswordToken::class, mappedBy="user", cascade={"persist", "remove"})

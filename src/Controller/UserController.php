@@ -42,7 +42,7 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            // TODO: alert success
+            $this->addFlash('success', 'Votre profil a bien été mis à jour.');
         }
 
         if ($formPassword->isSubmitted() && $formPassword->isValid()) {
@@ -50,7 +50,7 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
 
-            // TODO: alert success
+            $this->addFlash('success', 'Votre mot de passe a bien été mis à jour.');
         }
 
         return $this->render('user/edit.html.twig', [

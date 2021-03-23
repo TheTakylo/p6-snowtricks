@@ -18,12 +18,6 @@ class Video
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="videos")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $trick;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $platform;
@@ -32,6 +26,12 @@ class Video
      * @ORM\Column(type="string", length=255)
      */
     private $videoId;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Trick::class, inversedBy="videos")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $trick;
 
     private $url;
 

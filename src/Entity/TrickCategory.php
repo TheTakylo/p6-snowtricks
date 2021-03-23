@@ -30,15 +30,14 @@ class TrickCategory
     private $description;
 
     /**
-     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="trick_category")
-     */
-    private $tricks;
-
-    /**
      * @ORM\Column(type="string", length=255, unique=true)
      */
     private $slug;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Trick::class, mappedBy="trickCategory")
+     */
+    private $tricks;
 
     public function __construct()
     {

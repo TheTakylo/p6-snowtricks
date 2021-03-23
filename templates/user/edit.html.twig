@@ -10,14 +10,14 @@
                 <h1>Mon profil</h1>
                 <span class="small text-secondary"></span>
             </div>
-
         </div>
     </div>
     <div class="container mt-3">
+        {% include 'partials/flash.html.twig' %}
         <div class="row">
             <div class="col-md-7">
                 <div class="card mt-3">
-                    <div class="card-header"><i class="bi bi-person-circle me-2"></i>Mes informations</div>
+                    <div class="card-header h5 py-3"><i class="bi bi-person-circle me-2"></i>Mes informations</div>
                     <div class="card-body">
                         {{ form_start(formProfile) }}
 
@@ -35,7 +35,7 @@
                     </div>
                 </div>
                 <div class="card mt-5">
-                    <div class="card-header"><i class="bi bi-shield-lock-fill me-2"></i>Mot de passe</div>
+                    <div class="card-header h5 py-3"><i class="bi bi-shield-lock-fill me-2"></i>Mot de passe</div>
                     <div class="card-body">
                         <div class="card-body">
                             {{ form_start(formPassword) }}

@@ -20,12 +20,22 @@ class TrickRepository extends ServiceEntityRepository
         parent::__construct($registry, Trick::class);
     }
 
-    public function findForHomePage()
+    /**
+     * @param int $maxResult
+     * @param int|null $offset
+     * @return int|mixed|string
+     */
+    public function findForHomePage(int $maxResult = 15, $offset = null)
     {
-        return $this->createQueryBuilder('t')
+        $queryBuiler = $this->createQueryBuilder('t')
             ->orderBy('t.createdAt', 'DESC')
-            ->setMaxResults(15)
-            ->getQuery()
+            ->setMaxResults($maxResult);
+
+        if ($offset !== null) {
+            $queryBuiler->setFirstResult($maxResult * $offset);
+        }
+
+        return $queryBuiler->getQuery()
             ->getResult();
     }
 

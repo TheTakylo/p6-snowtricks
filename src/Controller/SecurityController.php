@@ -21,6 +21,7 @@ class SecurityController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $em
      * @param UserPasswordEncoderInterface $encoder
+     * @param UserService $userService
      * @return Response
      */
     public function register(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder, UserService $userService): Response

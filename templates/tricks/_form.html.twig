@@ -1,3 +1,5 @@
+{% form_theme form _self %}
+
 {{ form_start(form) }}
 <div class="row mt-3">
     <div class="col-md-6">
@@ -15,7 +17,7 @@
         Vidéos
     </div>
     <div class="card-body">
-        {{ form_row(form.videos, {'label': false}) }}
+        {{ form_row(form.videos, {'label': false, 'attr': { 'class': 'row'}}) }}
         <button type="button" class="btn btn-sm btn-primary mt-3" id="trick_videos_collection_add">Ajouter</button>
     </div>
 </div>
