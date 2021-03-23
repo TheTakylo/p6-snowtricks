@@ -4,6 +4,10 @@ namespace App\Service\VideoService;
 
 class VideoServiceFinder
 {
+    const YOUTUBE_LINK = 'https://youtube.com/watch?v=__VIDEOID__';
+    const DAILYMOTION_LINK = 'https://dailymotion.com/video/__VIDEOID__';
+    const VIMEO_LINK = 'https://vimeo.com/__VIDEOID__';
+
     const YOUTUBE_IFRAME = '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/__VIDEOID__" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
     const DAILYMOTION_IFRAME = '<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;"> <iframe style="width:100%;height:100%;position:absolute;left:0px;top:0px;overflow:hidden" frameborder="0" type="text/html" src="https://www.dailymotion.com/embed/video/__VIDEO_ID__?autoplay=1" width="100%" height="100%" allowfullscreen allow="autoplay"> </iframe> </div>';
     const VIMEO_IFRAME = '<iframe src="https://player.vimeo.com/video/__VIDEOID__?title=0&byline=0&portrait=0" width="100%" height="100%" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>';
@@ -65,5 +69,25 @@ class VideoServiceFinder
         }
 
         return str_replace('__VIDEOID__', $videoId, $serviesIframes[$service]);
+    }
+
+    /**
+     * @param $service
+     * @param $videoId
+     * @return string
+     */
+    public static function getLink(string $service, string $videoId)
+    {
+        $servicesLinks = [
+            'youtube'     => self::YOUTUBE_LINK,
+            'dailymotion' => self::DAILYMOTION_LINK,
+            'vimeo'       => self::VIMEO_LINK
+        ];
+
+        if (!array_key_exists($service, $servicesLinks)) {
+            return false;
+        }
+
+        return str_replace('__VIDEOID__', $videoId, $servicesLinks[$service]);
     }
 }
