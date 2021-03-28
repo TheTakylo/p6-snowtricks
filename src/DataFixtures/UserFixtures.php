@@ -17,12 +17,11 @@ class UserFixtures extends Fixture
         $this->encoder = $encoder;
     }
 
-    // ...
     public function load(ObjectManager $manager)
     {
         $users = [
-            ['email' => 'admin@admin.fr', 'firstname' => 'John', 'lastname' => 'Doe', 'password' => 'admin'],
-            ['email' => 'admin2@admin.fr', 'firstname' => 'John2', 'lastname' => 'Doe2', 'password' => 'admin2'],
+            ['email' => 'admin@admin.fr', 'firstname' => 'Jimmy', 'lastname' => 'Sweat', 'password' => 'admin'],
+            ['email' => 'admin2@admin.fr', 'firstname' => 'John', 'lastname' => 'Doe', 'password' => 'admin2'],
         ];
 
         foreach ($users as $u) {
