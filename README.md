@@ -54,3 +54,9 @@ php bin/console doctrine:fixtures:load
 #### Compte 2:
 - **Email:** admin2@admin.fr
 - **Mot de passe:** admin2
+
+
+# Tests unitaires:
+
+#### Lancer les tests unitaires
+./bin/phpunit

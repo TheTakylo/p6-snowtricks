@@ -76,11 +76,11 @@ class TrickControllerTest extends WebTestCase
 
         $client->submit($form);
 
-        $this->assertResponseRedirects('/tricks/grabs/titre-de-la-figure', 302);
+        $this->assertResponseRedirects('/tricks', 302);
 
         $client->followRedirect();
 
-        $this->assertSelectorTextSame('.bg-light > .container > h1.py-4', 'Titre de la figure');
+        $this->assertSelectorTextSame('div.bg-light h1', 'Toutes les figures');
     }
 
     public function testEditTrick()
