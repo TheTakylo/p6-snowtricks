@@ -58,5 +58,10 @@ php bin/console doctrine:fixtures:load
 
 # Tests unitaires:
 
+#### Configuration
+
+- Créer un fichier .env.test et le configurer en suivant les étapes précédentes
+- Lancer les commandes avec l'argument --env=test
+
 #### Lancer les tests unitaires
 ./bin/phpunit
