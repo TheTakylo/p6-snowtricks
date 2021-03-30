@@ -4,13 +4,14 @@
 
 {% block body %}
     <div class="container mt-5">
-        <div class="bg-light p-3 py-4 h-100">
+        <div class="bg-light p-3 py-4 h-100 mb-2">
             <h1>Toutes les figures</h1>
 
             {% if trickCategory %}
                 <h5 class="mt-3"> Catégorie: <strong class="text-decoration-underline">{{ trickCategory.name }}</strong></h5>
             {% endif %}
         </div>
+        {% include 'partials/flash.html.twig' %}
         <div class="tricks-container py-5 row">
             {% for trick in tricks %}
                 {% include 'tricks/_trick.html.twig' %}

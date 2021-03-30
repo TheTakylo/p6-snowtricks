@@ -12,6 +12,7 @@ use App\Repository\UserRepository;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -135,8 +136,9 @@ class UserController extends AbstractController
     }
 
     /**
-     * TODO: param converter doesnt work
      * @Route("/user/activate/{id}/{token}", name="user_activate")
+     * @ParamConverter("user", options={"mapping": {"id": "id"}})
+     * @ParamConverter("userValidationToken", options={"mapping": {"token":"token","id":"user_id"}})
      * @param User $user
      * @param UserValidationToken $userValidationToken
      * @param EntityManagerInterface $em

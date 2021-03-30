@@ -41,10 +41,8 @@ class TrickController extends AbstractController
             $em->persist($trick);
             $em->flush();
 
-            return $this->redirectToRoute('trick_show', [
-                'category_slug' => $trick->getTrickCategory()->getSlug(),
-                'trick_slug' => $trick->getSlug()
-            ]);
+            $this->addFlash('success', 'La figure a bien été ajoutée.');
+            return $this->redirectToRoute('trick_list');
         }
 
         return $this->render('tricks/add.html.twig', [
@@ -102,7 +100,7 @@ class TrickController extends AbstractController
             $this->addFlash('success', 'La figure a bien été supprimé');
         }
 
-        return $this->redirectToRoute('pages_index');
+        return $this->redirectToRoute('trick_list');
     }
 
     /**
@@ -117,7 +115,7 @@ class TrickController extends AbstractController
      */
     public function loadComments(TrickCategory $trickCategory, Trick $trick, Request $request, TrickCommentRepository $trickCommentRepository): Response
     {
-        $pageSize = 2;
+        $pageSize = 6;
         $page = $request->query->getInt('page', 1);
         $totalPages = 0;
         $comments = [];
@@ -158,7 +156,7 @@ class TrickController extends AbstractController
      */
     public function show(TrickCategory $trickCategory, Trick $trick, Request $request, EntityManagerInterface $em, TrickCommentRepository $trickCommentRepository): Response
     {
-        $pageSize = 2;
+        $pageSize = 6;
         $page = $request->query->getInt('page', 1);
         $totalPages = 0;
         $comments = [];
